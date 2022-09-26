@@ -1,0 +1,15 @@
+name: 'blinkist_challenge'
+version: '1.0.0'
+config-version: 2
+profile: 'blinkist_secret_profile'
+model-paths: ["models"]
+
+target-path: "target"  
+clean-targets:         
+  - "target"
+  - "dbt_packages"
+
+models:
+  blinkist_challenge:
+    +materialized: view  # Store all the queries defined in models as views 
+ 

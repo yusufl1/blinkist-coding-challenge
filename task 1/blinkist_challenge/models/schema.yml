@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: q1
+    description: "A view displaying the number of newly created users in the past two weeks in the DACH region"
+    columns:
+      - name: user_count
+        description: number of unique users 
+        # not_null test is good here since we use COUNT which would return 0 in the case of no matches
+        tests:
+          - not_null
+
+  - name: q2
+    description: "A view providing a list of all users created in 2021 with activity on either web or app in the past two weeks"
+    columns:
+      - name: user_id 
+        description: Unique user identifier
+        tests:
+          - unique
+          - not_null

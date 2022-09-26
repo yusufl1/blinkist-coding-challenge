@@ -1,0 +1,37 @@
+org: blinkist
+app: get-latest-exchange-rates
+service: get-latest-exchange-rates
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.8
+
+  environment:
+    BASE_RATE: EUR
+    # reference another yml file containing private key so that secrets
+    # are not versioned
+    APP_ID: ${file(./private_keys.yml):APP_ID}
+    EXCHANGE_ENDPOINT: https://openexchangerates.org/api/latest.json
+    S3_BUCKET: blinkist-bucket
+  
+  # Allow the lambda function to put objects into desired S3 Bucket 
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action: 
+            - 's3:PutObject'
+            # Reference the S3 Bucket name as defined above in environment so 
+            # we don't need to set it twice
+          Resource: arn:aws:s3:::${self:provider.environment.S3_BUCKET}/*
+
+functions:
+  get_exchange_rates:
+    handler: handler.main
+
+# This plugin lets us create a lambda layer with the required dependencies
+# using requirements.txt
+plugins:
+  - serverless-python-requirements
